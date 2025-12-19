@@ -28,6 +28,9 @@ You need to manually install DSInternals from [PowerShell-Gallery](https://www.p
 > [!NOTE]
 > Tested to be working with DSInternals release 6.2
 
+> [!WARNING]
+> For DSInternals release 6.2 you must use the `-SkipPublisherCheck` flag during installation via `Install-Module` ([read here why](https://github.com/MichaelGrafnetter/DSInternals/issues/214)).
+
 ````
 # Download the NuGet package manager binary.
 Install-PackageProvider -Name NuGet -Force
