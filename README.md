@@ -13,7 +13,7 @@
 
 ## 💎 Features
 
-Invoke-DCSync is a PowerShell wrapper script around popular tools such as PowerView, DSInternals and ADRecon. 
+Invoke-DCSync-via-DSInternals is a PowerShell wrapper script around popular tools such as PowerView, DSInternals and ADRecon. 
 
 It automates the task of dumping NT password hashes from an Active Directory environment. The script was designed for Active Directory password audits, where extracted password hashes undergo a cracking process in order to outline password strength and policy weaknesses. 
 
@@ -29,6 +29,21 @@ The script must be run in the context of an Active Directory domain user with DC
 
 ````powershell
 runas.exe /netonly /noprofile /user:example.com\dcsyncuser "powershell.exe -ep bypass"
+````
+
+Also, you need to manually install DSInternals from PowerShellGallery as Administrator:
+
+````
+# Download the NuGet package manager binary.
+Install-PackageProvider -Name NuGet -Force
+
+# Register the PowerShell Gallery as package repository if it is missing for any reason.
+if($null -eq (Get-PSRepository -Name PSGallery -ErrorAction SilentlyContinue)) {
+    Register-PSRepository -Default
+}
+
+# Download the DSInternals PowerShell module.
+Install-Module -Name DSInternals -Force
 ````
 
 Other from that, it's a matter of running the PowerShell .PS1 script:
