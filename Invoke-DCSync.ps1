@@ -52,6 +52,49 @@ $UACPropertyFlags = @(
 return (0..($UACPropertyFlags.Length) | ?{$UAC -bAnd [math]::Pow(2,$_)} | %{$UACPropertyFlags[$_]}) -join ";"
 }
 
+# helper function to convert DSInternals UAC format to Mimikatz-style format
+Function ConvertDSInternalsUAC ([string]$uacText)
+{
+    # Mapping from DSInternals names to Mimikatz-style names
+    $uacMapping = @{
+        'Script' = 'SCRIPT'
+        'Disabled' = 'ACCOUNTDISABLE'
+        'HomedirRequired' = 'HOMEDIR_REQUIRED'
+        'Lockout' = 'LOCKOUT'
+        'PasswordNotRequired' = 'PASSWD_NOTREQD'
+        'PasswordCannotChange' = 'PASSWD_CANT_CHANGE'
+        'EncryptedTextPasswordAllowed' = 'ENCRYPTED_TEXT_PWD_ALLOWED'
+        'TempDuplicateAccount' = 'TEMP_DUPLICATE_ACCOUNT'
+        'NormalAccount' = 'NORMAL_ACCOUNT'
+        'InterdomainTrustAccount' = 'INTERDOMAIN_TRUST_ACCOUNT'
+        'WorkstationTrustAccount' = 'WORKSTATION_TRUST_ACCOUNT'
+        'ServerTrustAccount' = 'SERVER_TRUST_ACCOUNT'
+        'PasswordNeverExpires' = 'DONT_EXPIRE_PASSWORD'
+        'MNSLogonAccount' = 'MNS_LOGON_ACCOUNT'
+        'SmartcardRequired' = 'SMARTCARD_REQUIRED'
+        'TrustedForDelegation' = 'TRUSTED_FOR_DELEGATION'
+        'NotDelegated' = 'NOT_DELEGATED'
+        'UseDESKeyOnly' = 'USE_DES_KEY_ONLY'
+        'DontRequirePreauth' = 'DONT_REQ_PREAUTH'
+        'PasswordExpired' = 'PASSWORD_EXPIRED'
+        'TrustedToAuthForDelegation' = 'TRUSTED_TO_AUTH_FOR_DELEGATION'
+        'PartialSecretsAccount' = 'PARTIAL_SECRETS_ACCOUNT'
+    }
+    
+    # Split the UAC text by comma and space, then map each value
+    $uacFlags = $uacText -split ',\s*'
+    $convertedFlags = @()
+    foreach ($flag in $uacFlags) {
+        if ($uacMapping.ContainsKey($flag)) {
+            $convertedFlags += $uacMapping[$flag]
+        } else {
+            $convertedFlags += $flag  # Keep original if no mapping found
+        }
+    }
+    
+    return $convertedFlags -join ';'
+}
+
 # Check if DSInternals module is available
 Write-Host "[INFO] Checking for DSInternals module" -ForegroundColor Gray
 if (-not (Get-Module -ListAvailable -Name DSInternals)) {
@@ -102,14 +145,16 @@ if ($confirmation -eq 'y') {
     $logContent = @()
     $id = 0
     foreach ($account in $userAccounts) {
-        # DSInternals returns UAC as text, use it directly (already decoded)
+        # DSInternals returns UAC as text, convert to Mimikatz-style format
         $uacText = $account.UserAccountControl -join ", "
         if ([string]::IsNullOrEmpty($uacText)) {
             $uacText = "NormalAccount"
         }
+        $uacConverted = ConvertDSInternalsUAC $uacText
+        
         # Convert NT hash byte array to hex string
         $ntHashHex = ($account.NTHash | ForEach-Object { $_.ToString("x2") }) -join ""
-        $line = "$id`t$($account.SamAccountName)`t$ntHashHex`t$uacText"
+        $line = "$id`t$($account.SamAccountName)`t$ntHashHex`t$uacConverted"
         $logContent += $line
         $id++
     }
