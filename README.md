@@ -23,15 +23,7 @@ The script will parse the output of DSInternals' DCSync via `Get-ADReplAccount`a
 
 ## 🎓 Usage
 
-To utilize this PowerShell script, it's recommended to disable Antivirus/EDR. Alternatively, if no advanced EDR is in use, it may be sufficient to bypass AMSI for the current PowerShell process.
-
-The script must be run in the context of an Active Directory domain user with DCSync rights. Usually, a Domain Administrator (DA) user account is privileged enough and recommended for ease of use. You may obtain a PowerShell terminal in the context of such domain user via the following PowerShell command:
-
-````powershell
-runas.exe /netonly /noprofile /user:example.com\dcsyncuser "powershell.exe -ep bypass"
-````
-
-Also, you need to manually install DSInternals from PowerShellGallery as Administrator:
+You need to manually install DSInternals from [PowerShell-Gallery](https://www.powershellgallery.com/packages/DSInternals/) as Local Administrator:
 
 ````
 # Download the NuGet package manager binary.
@@ -44,6 +36,14 @@ if($null -eq (Get-PSRepository -Name PSGallery -ErrorAction SilentlyContinue)) {
 
 # Download the DSInternals PowerShell module.
 Install-Module -Name DSInternals -Force
+````
+
+To utilize this PowerShell script, it's recommended to disable Antivirus/EDR. Alternatively, if no advanced EDR is in use, it may be sufficient to bypass AMSI for the current PowerShell process.
+
+The script must be run in the context of an Active Directory domain user with DCSync rights. Usually, a Domain Administrator (DA) user account is privileged enough and recommended for ease of use. You may obtain a PowerShell terminal in the context of such domain user via the following PowerShell command:
+
+````powershell
+runas.exe /netonly /noprofile /user:example.com\dcsyncuser "powershell.exe -ep bypass"
 ````
 
 Other from that, it's a matter of running the PowerShell .PS1 script:
