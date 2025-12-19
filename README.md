@@ -26,10 +26,10 @@ The script will parse the output of DSInternals' DCSync via `Get-ADReplAccount`a
 You need to manually install DSInternals from [PowerShell-Gallery](https://www.powershellgallery.com/packages/DSInternals/) as Local Administrator:
 
 > [!NOTE]
-> Tested to be working with DSInternals release 6.2
+> Tested to be working with DSInternals release 6.2.0
 
 > [!WARNING]
-> For DSInternals release 6.2 you must use the `-SkipPublisherCheck` flag during installation via `Install-Module` ([read here why](https://github.com/MichaelGrafnetter/DSInternals/issues/214)).
+> For DSInternals release 6.2.0 you must use the `-SkipPublisherCheck` flag during installation via `Install-Module` ([read here why](https://github.com/MichaelGrafnetter/DSInternals/issues/214)).
 
 ````
 # Download the NuGet package manager binary.
