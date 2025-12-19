@@ -38,7 +38,7 @@ if($null -eq (Get-PSRepository -Name PSGallery -ErrorAction SilentlyContinue)) {
 Install-Module -Name DSInternals -Force
 ````
 
-To utilize this PowerShell script, it's recommended to disable Antivirus/EDR. Alternatively, if no advanced EDR is in use, it may be sufficient to bypass AMSI for the current PowerShell process.
+To utilize the `Invoke-DCSync.ps1` PowerShell script, it's recommended to disable Antivirus/EDR. Alternatively, if no advanced EDR is in use, it may be sufficient to bypass AMSI for the current PowerShell process.
 
 The script must be run in the context of an Active Directory domain user with DCSync rights. Usually, a Domain Administrator (DA) user account is privileged enough and recommended for ease of use. You may obtain a PowerShell terminal in the context of such domain user via the following PowerShell command:
 
